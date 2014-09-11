@@ -17,10 +17,10 @@ Jeweler::Tasks.new do |gem|
   gem.name = "rspec_rails_scaffold_templates"
   gem.homepage = "http://github.com/dima4p/rspec_rails_scaffold_templates"
   gem.license = "MIT"
-  gem.summary = %Q{TODO: one-line summary of your gem}
-  gem.description = %Q{TODO: longer description of your gem}
+  gem.summary = %Q{RSpec scaffold generator templates that use FactoryGirl and WiceGrid}
+  gem.description = %Q{RSpec scaffold generator templates that use FactoryGirl and WiceGrid}
   gem.email = "dima@koulikoff.ru"
-  gem.authors = ["Dmitri Koulikoff (acer)"]
+  gem.authors = ["Dmitri Koulikoff"]
   # dependencies defined in Gemfile
 end
 Jeweler::RubygemsDotOrgTasks.new

@@ -1,6 +1,25 @@
 = rspec_rails_scaffold_templates
 
-Description goes here.
+RSpec scaffold generator templates that
+* uses FactoryGirl to simplify form valid parameters
+* if gem WiceGrid is used prepares all the staff for index spec
+* makes all necessary stubs to use with cancan (cancancan) gem
+
+== Installation
+
+Add to your Gemfile
+
+  gem 'rspec_rails_scaffold_templates'
+
+Then bundle as usual.
+
+== Usage
+
+Next time you run
+
+  rails generate scaffold SomeModel ...
+
+you will get the needed specs for controller and views.
 
 == Contributing to rspec_rails_scaffold_templates
  
@@ -14,6 +33,6 @@ Description goes here.
 
 == Copyright
 
-Copyright (c) 2014 Dmitri Koulikoff (acer). See LICENSE.txt for
+Copyright (c) 2014 Dmitri Koulikoff. See LICENSE.txt for
 further details.
 
