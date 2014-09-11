@@ -1,6 +1,10 @@
+<% if File.exist?(File.join %w[spec rails_helper.rb]) -%>
+require 'rails_helper'
+<% else -%>
 require 'spec_helper'
+<% end -%>
 
-describe "<%= class_name.pluralize %>" do
+describe "<%= class_name.pluralize %>", type: :request do
   before :each do
     allow_any_instance_of(<%= class_name.pluralize %>Controller).to receive(:current_user).and_return(current_user)
   end
