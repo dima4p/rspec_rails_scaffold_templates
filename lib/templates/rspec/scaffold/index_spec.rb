@@ -36,12 +36,12 @@ describe "<%= ns_table_name %>/index", :type => :view do
 <% end -%>
     ])
 <% end -%>
-<% if defined? Wice::WiceGrid -%>
-    assign(:grid, Wice::WiceGrid.new(<%= class_name %>, controller))
-<% end -%>
   end
 
   it "renders a list of <%= table_name %>" do
+<% if defined? Wice::WiceGrid -%>
+    assign :<%= table_name %>, [@<%= ns_file_name %>]
+<% end -%>
     render
 
 <% for attribute in output_attributes -%>
@@ -56,4 +56,23 @@ describe "<%= ns_table_name %>/index", :type => :view do
 <% end -%>
 <% end -%>
   end
+
+<% if defined? Wice::WiceGrid -%>
+  it "renders a list of <%= table_name %> in WiceGrid" do
+    assign :grid, Wice::WiceGrid.new(<%= class_name %>, controller)
+    render
+
+<% for attribute in output_attributes -%>
+<% if Rails.application.config.generators.options[:rails][:fixture_replacement] == :factory_girl -%>
+<% if attribute.reference? -%>
+    assert_select 'tr>td', text: @<%= ns_file_name %>.<%= attribute.name %>.name, count: <%= size %>
+<% else -%>
+    assert_select 'tr>td', text: @<%= ns_file_name %>.<%= attribute.name %>.to_s, count: <%= size %>
+<% end -%>
+<% else -%>
+    assert_select "tr>td", :text => <%= value_for(attribute) %>.to_s, :count => <%= size %>
+<% end -%>
+<% end -%>
+  end
+<% end -%>
 end

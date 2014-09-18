@@ -24,8 +24,8 @@ describe "<%= ns_table_name %>/new", :type => :view do
 
     assert_select "form[action=?][method=?]", <%= index_helper %>_path, "post" do
 <% for attribute in output_attributes -%>
-      <% name = attribute.respond_to?(:column_name) ? attribute.column_name : attribute.name -%>
-      <% input_type = attribute.reference? ? 'select' : attribute.input_type -%>
+<% name = attribute.respond_to?(:column_name) ? attribute.column_name : attribute.name -%>
+<% input_type = attribute.reference? ? 'select' : attribute.input_type -%>
       assert_select '<%= input_type -%>#<%= ns_file_name %>_<%= name %>[name=?]', '<%= ns_file_name %>[<%= name %>]'
 <% end -%>
     end
