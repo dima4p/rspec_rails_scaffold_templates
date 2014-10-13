@@ -26,9 +26,9 @@ describe <%= controller_class_name %>Controller, :type => :controller do
   }
 <% end -%>
 
-  let(:invalid_attributes) {
+  let(:invalid_attributes) do
     skip("Add a hash of attributes invalid for your model")
-  }
+  end
 
   # This should return the minimal set of values that should be in the session
   # in order to pass any filters (e.g. authentication) defined in
@@ -84,9 +84,9 @@ describe <%= controller_class_name %>Controller, :type => :controller do
   describe "POST create" do
     describe "with valid params" do
       it "creates a new <%= class_name %>" do
-        expect {
+        expect do
           post :create, {:<%= ns_file_name %> => valid_attributes}, valid_session
-        }.to change(<%= class_name %>, :count).by(1)
+        end.to change(<%= class_name %>, :count).by(1)
       end
 
       it "assigns a newly created <%= ns_file_name %> as @<%= ns_file_name %>" do
@@ -127,7 +127,8 @@ describe <%= controller_class_name %>Controller, :type => :controller do
 <% else -%>
         <%= file_name %> = <%= class_name %>.create! valid_attributes
 <% end -%>
-        # expect_any_instance_of(<%= class_name %>).to receive(:update).with(new_attributes.inject({}){|_, (k, v)| _[k] = v.to_s; _})
+        # expect_any_instance_of(<%= class_name %>)
+        #   .to receive(:update).with(new_attributes.inject({}){|_, (k, v)| _[k] = v.to_s; _})
         put :update, {:id => <%= file_name %>.to_param, :<%= ns_file_name %> => new_attributes}, valid_session
         <%= file_name %>.reload
         # skip("Add assertions for updated state")
@@ -187,9 +188,9 @@ describe <%= controller_class_name %>Controller, :type => :controller do
 <% else -%>
       <%= file_name %> = <%= class_name %>.create! valid_attributes
 <% end -%>
-      expect {
+      expect do
         delete :destroy, {:id => <%= file_name %>.to_param}, valid_session
-      }.to change(<%= class_name %>, :count).by(-1)
+      end.to change(<%= class_name %>, :count).by(-1)
     end
 
     it "redirects to the <%= table_name %> list" do
