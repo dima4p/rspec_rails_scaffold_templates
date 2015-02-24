@@ -22,7 +22,7 @@ describe "<%= ns_table_name %>/new", :type => :view do
   it "renders new <%= ns_file_name %> form" do
     render
 
-    assert_select "form[action=?][method=?]", <%= index_helper %>_path, "post" do
+    assert_select "form[action='#{<%= index_helper %>_path}'][method='post']" do
 <% for attribute in output_attributes -%>
 <% name = attribute.respond_to?(:column_name) ? attribute.column_name : attribute.name -%>
 <% input_type = attribute.reference? ? 'select' : attribute.input_type -%>

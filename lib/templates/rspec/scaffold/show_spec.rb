@@ -4,7 +4,7 @@ require 'rails_helper'
 require 'spec_helper'
 <% end -%>
 
-<% output_attributes = attributes.reject{|attribute| [:datetime, :timestamp, :time, :date].index(attribute.type) } -%>
+<% output_attributes = attributes.reject{|attribute| [:created_at, :deleted_at, :updated_at].index(attribute.name) or attribute.password_digest? } -%>
 describe "<%= ns_table_name %>/show", :type => :view do
   before(:each) do
     allow(controller).to receive(:can?).and_return(true)
@@ -21,17 +21,17 @@ describe "<%= ns_table_name %>/show", :type => :view do
 <% end -%>
   end
 
-  it "renders attributes in <p>" do
+  it "renders attributes in <dl>" do
     render
 <% for attribute in output_attributes -%>
 <% if Rails.application.config.generators.options[:rails][:fixture_replacement] == :factory_girl -%>
 <% if attribute.reference? -%>
-    expect(rendered).to match(Regexp.new @<%= ns_file_name %>.<%= attribute.name %>.name)
+    assert_select 'dl>dd', text: Regexp.new(@<%= ns_file_name %>.<%= attribute.name %>.name)
 <% else -%>
-    expect(rendered).to match(Regexp.new @<%= ns_file_name %>.<%= attribute.name %>.to_s)
+    assert_select 'dl>dd', text: Regexp.new(@<%= ns_file_name %>.<%= attribute.name %>.to_s)
 <% end -%>
 <% else -%>
-    expect(rendered).to match(/<%= raw_value_for(attribute) %>/)
+    assert_select 'dl>dd', text: Regexp.new(raw_value_for(attribute))
 <% end -%>
 <% end -%>
   end

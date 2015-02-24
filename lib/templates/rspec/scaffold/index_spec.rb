@@ -4,7 +4,7 @@ require 'rails_helper'
 require 'spec_helper'
 <% end -%>
 
-<% output_attributes = attributes.reject{|attribute| [:datetime, :timestamp, :time, :date].index(attribute.type) } -%>
+<% output_attributes = attributes.reject{|attribute| [:created_at, :deleted_at, :updated_at].index(attribute.name) or attribute.password_digest? } -%>
 describe "<%= ns_table_name %>/index", :type => :view do
   before(:each) do
     allow(controller).to receive(:can?).and_return(true)

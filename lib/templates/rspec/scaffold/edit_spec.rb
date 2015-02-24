@@ -22,7 +22,7 @@ describe "<%= ns_table_name %>/edit", :type => :view do
   it "renders the edit <%= ns_file_name %> form" do
     render
 
-    assert_select "form[action=?][method=?]", <%= ns_file_name %>_path(@<%= ns_file_name %>), "post" do
+    assert_select "form[action='#{<%= ns_file_name %>_path(@<%= ns_file_name %>)}'][method='post']" do
 <% for attribute in output_attributes -%>
 <% name = attribute.respond_to?(:column_name) ? attribute.column_name : attribute.name -%>
 <% input_type = attribute.reference? ? 'select' : attribute.input_type -%>
