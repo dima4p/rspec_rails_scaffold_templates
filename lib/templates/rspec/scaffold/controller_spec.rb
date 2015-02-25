@@ -5,7 +5,7 @@ require 'spec_helper'
 <% end -%>
 
 <% module_namespacing do -%>
-describe <%= controller_class_name %>Controller, :type => :controller do
+describe <%= controller_class_name %>Controller, type: :controller do
 
   before :each do
     allow(controller).to receive(:current_user).and_return(current_user)
@@ -57,7 +57,7 @@ describe <%= controller_class_name %>Controller, :type => :controller do
 <% else -%>
       <%= file_name %> = <%= class_name %>.create! valid_attributes
 <% end -%>
-      get :show, {:id => <%= file_name %>.to_param}, valid_session
+      get :show, {id: <%= file_name %>.to_param}, valid_session
       expect(assigns(:<%= ns_file_name %>)).to eq(<%= file_name %>)
     end
   end
@@ -76,7 +76,7 @@ describe <%= controller_class_name %>Controller, :type => :controller do
 <% else -%>
       <%= file_name %> = <%= class_name %>.create! valid_attributes
 <% end -%>
-      get :edit, {:id => <%= file_name %>.to_param}, valid_session
+      get :edit, {id: <%= file_name %>.to_param}, valid_session
       expect(assigns(:<%= ns_file_name %>)).to eq(<%= file_name %>)
     end
   end
@@ -85,18 +85,18 @@ describe <%= controller_class_name %>Controller, :type => :controller do
     describe "with valid params" do
       it "creates a new <%= class_name %>" do
         expect do
-          post :create, {:<%= ns_file_name %> => valid_attributes}, valid_session
+          post :create, {<%= ns_file_name %>: valid_attributes}, valid_session
         end.to change(<%= class_name %>, :count).by(1)
       end
 
       it "assigns a newly created <%= ns_file_name %> as @<%= ns_file_name %>" do
-        post :create, {:<%= ns_file_name %> => valid_attributes}, valid_session
+        post :create, {<%= ns_file_name %>: valid_attributes}, valid_session
         expect(assigns(:<%= ns_file_name %>)).to be_a(<%= class_name %>)
         expect(assigns(:<%= ns_file_name %>)).to be_persisted
       end
 
       it "redirects to the created <%= ns_file_name %>" do
-        post :create, {:<%= ns_file_name %> => valid_attributes}, valid_session
+        post :create, {<%= ns_file_name %>: valid_attributes}, valid_session
         expect(response).to redirect_to(<%= class_name %>.last)
         # expect(response).to redirect_to(<%= index_helper %>_url)
       end
@@ -105,13 +105,13 @@ describe <%= controller_class_name %>Controller, :type => :controller do
     describe "with invalid params" do
       it "assigns a newly created but unsaved <%= ns_file_name %> as @<%= ns_file_name %>" do
         # allow_any_instance_of(<%= class_name %>).to receive(:save).and_return(false)
-        post :create, {:<%= ns_file_name %> => invalid_attributes}, valid_session
+        post :create, {<%= ns_file_name %>: invalid_attributes}, valid_session
         expect(assigns(:<%= ns_file_name %>)).to be_a_new(<%= class_name %>)
       end
 
       it "re-renders the 'new' template" do
         # allow_any_instance_of(<%= class_name %>).to receive(:save).and_return(false)
-        post :create, {:<%= ns_file_name %> => invalid_attributes}, valid_session
+        post :create, {<%= ns_file_name %>: invalid_attributes}, valid_session
         expect(response).to render_template("new")
       end
     end
@@ -129,7 +129,7 @@ describe <%= controller_class_name %>Controller, :type => :controller do
 <% end -%>
         # expect_any_instance_of(<%= class_name %>)
         #   .to receive(:update).with(new_attributes.inject({}){|_, (k, v)| _[k] = v.to_s; _})
-        put :update, {:id => <%= file_name %>.to_param, :<%= ns_file_name %> => new_attributes}, valid_session
+        put :update, {id: <%= file_name %>.to_param, <%= ns_file_name %>: new_attributes}, valid_session
         <%= file_name %>.reload
         # skip("Add assertions for updated state")
         expect(<%= file_name %>.<%= attribute_name %>).to eq 'New value'
@@ -141,7 +141,7 @@ describe <%= controller_class_name %>Controller, :type => :controller do
 <% else -%>
         <%= file_name %> = <%= class_name %>.create! valid_attributes
 <% end -%>
-        put :update, {:id => <%= file_name %>.to_param, :<%= ns_file_name %> => valid_attributes}, valid_session
+        put :update, {id: <%= file_name %>.to_param, <%= ns_file_name %>: valid_attributes}, valid_session
         expect(assigns(:<%= ns_file_name %>)).to eq(<%= file_name %>)
       end
 
@@ -151,7 +151,7 @@ describe <%= controller_class_name %>Controller, :type => :controller do
 <% else -%>
         <%= file_name %> = <%= class_name %>.create! valid_attributes
 <% end -%>
-        put :update, {:id => <%= file_name %>.to_param, :<%= ns_file_name %> => valid_attributes}, valid_session
+        put :update, {id: <%= file_name %>.to_param, <%= ns_file_name %>: valid_attributes}, valid_session
         expect(response).to redirect_to(<%= file_name %>)
       end
     end
@@ -164,7 +164,7 @@ describe <%= controller_class_name %>Controller, :type => :controller do
         <%= file_name %> = <%= class_name %>.create! valid_attributes
 <% end -%>
         # allow_any_instance_of(<%= class_name %>).to receive(:update).and_return(false)
-        put :update, {:id => <%= file_name %>.to_param, :<%= ns_file_name %> => invalid_attributes}, valid_session
+        put :update, {id: <%= file_name %>.to_param, <%= ns_file_name %>: invalid_attributes}, valid_session
         expect(assigns(:<%= ns_file_name %>)).to be_a(<%= class_name %>)
       end
 
@@ -175,7 +175,7 @@ describe <%= controller_class_name %>Controller, :type => :controller do
         <%= file_name %> = <%= class_name %>.create! valid_attributes
 <% end -%>
         # allow_any_instance_of(<%= class_name %>).to receive(:update).and_return(false)
-        put :update, {:id => <%= file_name %>.to_param, :<%= ns_file_name %> => invalid_attributes}, valid_session
+        put :update, {id: <%= file_name %>.to_param, <%= ns_file_name %>: invalid_attributes}, valid_session
         expect(response).to render_template("edit")
       end
     end
@@ -189,7 +189,7 @@ describe <%= controller_class_name %>Controller, :type => :controller do
       <%= file_name %> = <%= class_name %>.create! valid_attributes
 <% end -%>
       expect do
-        delete :destroy, {:id => <%= file_name %>.to_param}, valid_session
+        delete :destroy, {id: <%= file_name %>.to_param}, valid_session
       end.to change(<%= class_name %>, :count).by(-1)
     end
 
@@ -199,7 +199,7 @@ describe <%= controller_class_name %>Controller, :type => :controller do
 <% else -%>
       <%= file_name %> = <%= class_name %>.create! valid_attributes
 <% end -%>
-      delete :destroy, {:id => <%= file_name %>.to_param}, valid_session
+      delete :destroy, {id: <%= file_name %>.to_param}, valid_session
       expect(response).to redirect_to(<%= index_helper %>_url)
     end
   end   # describe "DELETE destroy"

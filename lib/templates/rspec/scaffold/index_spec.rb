@@ -5,7 +5,7 @@ require 'spec_helper'
 <% end -%>
 
 <% output_attributes = attributes.reject{|attribute| [:created_at, :deleted_at, :updated_at].index(attribute.name) or attribute.password_digest? } -%>
-describe "<%= ns_table_name %>/index", :type => :view do
+describe "<%= ns_table_name %>/index", type: :view do
   before(:each) do
     allow(controller).to receive(:can?).and_return(true)
 <% if options[:fixture_replacement] == :factory_girl -%>
