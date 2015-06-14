@@ -7,7 +7,9 @@ require 'spec_helper'
 <% output_attributes = attributes.reject{|attribute| [:datetime, :timestamp, :time, :date].index(attribute.type) } -%>
 describe "<%= ns_table_name %>/new", type: :view do
   before(:each) do
+<% if Rails.application.config.generators.options[:rails][:cancan] -%>
     allow(controller).to receive(:can?).and_return(true)
+<% end -%>
 <% if Rails.application.config.generators.options[:rails][:fixture_replacement] == :factory_girl -%>
     @<%= ns_file_name %> = assign(:<%= ns_file_name %>, build(:<%= ns_file_name %>))
   end

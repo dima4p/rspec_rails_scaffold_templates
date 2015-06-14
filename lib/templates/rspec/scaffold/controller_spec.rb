@@ -7,10 +7,12 @@ require 'spec_helper'
 <% module_namespacing do -%>
 describe <%= controller_class_name %>Controller, type: :controller do
 
+<% if Rails.application.config.generators.options[:rails][:cancan] -%>
   before :each do
     allow(controller).to receive(:current_user).and_return(current_user)
   end
 
+<% end -%>
   # This should return the minimal set of attributes required to create a valid
   # <%= class_name %>. As you add validations to <%= class_name %>, be sure to
   # adjust the attributes here as well. The list could not be empty.

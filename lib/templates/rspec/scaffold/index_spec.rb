@@ -7,7 +7,9 @@ require 'spec_helper'
 <% output_attributes = attributes.reject{|attribute| [:created_at, :deleted_at, :updated_at].index(attribute.name) or attribute.password_digest? } -%>
 describe "<%= ns_table_name %>/index", type: :view do
   before(:each) do
+<% if Rails.application.config.generators.options[:rails][:cancan] -%>
     allow(controller).to receive(:can?).and_return(true)
+<% end -%>
 <% if options[:fixture_replacement] == :factory_girl -%>
   # options[:fixture_replacement] == :factory_girl
 <% end -%>
@@ -16,6 +18,7 @@ describe "<%= ns_table_name %>/index", type: :view do
     @<%= ns_file_name %> = create(:<%= ns_file_name %>)
 <% if not defined? Wice::WiceGrid -%>
     assign(:<%= table_name %>, [@<%= ns_file_name %>, @<%= ns_file_name %>])
+<% size = 2 -%>
 <% end -%>
 <% else -%>
 <% size = 2 -%>
