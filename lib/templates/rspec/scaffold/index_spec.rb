@@ -55,7 +55,7 @@ describe "<%= ns_table_name %>/index", type: :view do
     assert_select 'tr>td', text: @<%= ns_file_name %>.<%= attribute.name %>.to_s, count: <%= size %>
 <% end -%>
 <% else -%>
-    assert_select "tr>td", :text => <%= value_for(attribute) %>.to_s, :count => <%= size %>
+    assert_select "tr>td", text: <%= value_for(attribute) %>.to_s, count: <%= size %>
 <% end -%>
 <% end -%>
   end
@@ -73,7 +73,7 @@ describe "<%= ns_table_name %>/index", type: :view do
     assert_select 'tr>td', text: @<%= ns_file_name %>.<%= attribute.name %>.to_s, count: <%= size %>
 <% end -%>
 <% else -%>
-    assert_select "tr>td", text: <%= value_for(attribute) %>.to_s, :count => <%= size %>
+    assert_select "tr>td", text: <%= value_for(attribute) %>.to_s, count: <%= size %>
 <% end -%>
 <% end -%>
   end
