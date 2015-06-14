@@ -16,10 +16,10 @@ describe <%= controller_class_name %>Controller, type: :controller do
   # This should return the minimal set of attributes required to create a valid
   # <%= class_name %>. As you add validations to <%= class_name %>, be sure to
   # adjust the attributes here as well. The list could not be empty.
-<% if Rails.application.config.generators.options[:rails][:fixture_replacement] == :factory_girl -%>
-<% factory_girl = true -%>
 <% attribute = attributes.detect{|a| attributes.detect{|a| a.name == 'name'} || attributes.detect{|a| a.name == 'title'} || attributes.first} -%>
 <% attribute_name = attribute.respond_to?(:column_name) ? attribute.column_name : attribute.name -%>
+<% if Rails.application.config.generators.options[:rails][:fixture_replacement] == :factory_girl -%>
+<% factory_girl = true -%>
   let(:valid_attributes) {FactoryGirl.build(:<%=file_name%>).attributes.slice *%w[<%= attribute_name %>]}
 <% else -%>
 <% factory_girl = false -%>
