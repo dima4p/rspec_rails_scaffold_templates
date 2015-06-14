@@ -31,7 +31,7 @@ describe "<%= ns_table_name %>/index", type: :view do
 <% [1,2].each_with_index do |id, model_index| -%>
       <%= class_name %>.create(<%= output_attributes.empty? ? (model_index == 1 ? ')' : '),') : '' %>
 <% output_attributes.each_with_index do |attribute, attribute_index| -%>
-        :<%= attribute.name %> => <%= value_for(attribute) %><%= attribute_index == output_attributes.length - 1 ? '' : ','%>
+        <%= attribute.name %>: <%= value_for(attribute) %><%= attribute_index == output_attributes.length - 1 ? '' : ','%>
 <% end -%>
 <% if !output_attributes.empty? -%>
       <%= model_index == 1 ? ')' : '),' %>
@@ -73,7 +73,7 @@ describe "<%= ns_table_name %>/index", type: :view do
     assert_select 'tr>td', text: @<%= ns_file_name %>.<%= attribute.name %>.to_s, count: <%= size %>
 <% end -%>
 <% else -%>
-    assert_select "tr>td", :text => <%= value_for(attribute) %>.to_s, :count => <%= size %>
+    assert_select "tr>td", text: <%= value_for(attribute) %>.to_s, :count => <%= size %>
 <% end -%>
 <% end -%>
   end

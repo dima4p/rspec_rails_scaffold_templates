@@ -15,7 +15,7 @@ describe "<%= ns_table_name %>/show", type: :view do
 <% else -%>
     @<%= ns_file_name %> = assign(:<%= ns_file_name %>, <%= class_name %>.create!(<%= '))' if output_attributes.empty? %>
 <% output_attributes.each_with_index do |attribute, attribute_index| -%>
-      :<%= attribute.name %> => <%= value_for(attribute) %><%= attribute_index == output_attributes.length - 1 ? '' : ','%>
+      <%= attribute.name %>: <%= value_for(attribute) %><%= attribute_index == output_attributes.length - 1 ? '' : ','%>
 <% end -%>
 <% if !output_attributes.empty? -%>
     ))
@@ -33,7 +33,7 @@ describe "<%= ns_table_name %>/show", type: :view do
     assert_select 'dl>dd', text: Regexp.new(@<%= ns_file_name %>.<%= attribute.name %>.to_s)
 <% end -%>
 <% else -%>
-    assert_select 'dl>dd', text: Regexp.new(raw_value_for(attribute))
+    assert_select 'dl>dd', text: <%= value_for(attribute) %>
 <% end -%>
 <% end -%>
   end

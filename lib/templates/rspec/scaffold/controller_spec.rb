@@ -23,9 +23,9 @@ describe <%= controller_class_name %>Controller, type: :controller do
   let(:valid_attributes) {FactoryGirl.build(:<%=file_name%>).attributes.slice *%w[<%= attribute_name %>]}
 <% else -%>
 <% factory_girl = false -%>
-  let(:valid_attributes) {
+  let(:valid_attributes) do
     skip("Add a hash of attributes valid for your model")
-  }
+  end
 <% end -%>
 
   let(:invalid_attributes) do
