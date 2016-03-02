@@ -14,48 +14,31 @@ describe "<%= ns_table_name %>/index", type: :view do
   # options[:fixture_replacement] == :factory_girl
 <% end -%>
 <% if Rails.application.config.generators.options[:rails][:fixture_replacement] == :factory_girl -%>
-<% size = 1 -%>
     @<%= ns_file_name %> = create(:<%= ns_file_name %>)
-<% if not defined? Wice::WiceGrid -%>
-    assign(:<%= table_name %>, [@<%= ns_file_name %>, @<%= ns_file_name %>])
-<% size = 2 -%>
-<% end -%>
-<% else -%>
-<% size = 2 -%>
-<% if defined? Wice::WiceGrid -%>
-    result_set = assign(:<%= table_name %>, [
-<% else -%>
-    assign(:<%= table_name %>, [
-<% end -%>
-      # if you got an exception here add gem 'rspec-activemodel-mocks' to your Gemfile
-<% [1,2].each_with_index do |id, model_index| -%>
-      <%= class_name %>.create(<%= output_attributes.empty? ? (model_index == 1 ? ')' : '),') : '' %>
+<% else # no factory_girl -%>
+    <%= class_name %>.create(<%= output_attributes.empty? ? ')' : '' %>
 <% output_attributes.each_with_index do |attribute, attribute_index| -%>
-        <%= attribute.name %>: <%= value_for(attribute) %><%= attribute_index == output_attributes.length - 1 ? '' : ','%>
+      <%= attribute.name %>: <%= value_for(attribute) %><%= attribute_index == output_attributes.length - 1 ? '' : ','%>
 <% end -%>
 <% if !output_attributes.empty? -%>
-      <%= model_index == 1 ? ')' : '),' %>
+    )
 <% end -%>
 <% end -%>
-    ])
-<% end -%>
+    assign :<%= table_name %>, <%= class_name %>.all
   end
 
   it "renders a list of <%= table_name %>" do
-<% if defined? Wice::WiceGrid -%>
-    assign :<%= table_name %>, [@<%= ns_file_name %>]
-<% end -%>
     render
 
 <% for attribute in output_attributes -%>
 <% if Rails.application.config.generators.options[:rails][:fixture_replacement] == :factory_girl -%>
 <% if attribute.reference? -%>
-    assert_select 'tr>td', text: @<%= ns_file_name %>.<%= attribute.name %>.name, count: <%= size %>
+    assert_select 'tr>td', text: @<%= ns_file_name %>.<%= attribute.name %>.name, count: 1
 <% else -%>
-    assert_select 'tr>td', text: @<%= ns_file_name %>.<%= attribute.name %>.to_s, count: <%= size %>
+    assert_select 'tr>td', text: @<%= ns_file_name %>.<%= attribute.name %>.to_s, count: 1
 <% end -%>
 <% else -%>
-    assert_select "tr>td", text: <%= value_for(attribute) %>.to_s, count: <%= size %>
+    assert_select "tr>td", text: <%= value_for(attribute) %>.to_s, count: 1
 <% end -%>
 <% end -%>
   end
@@ -68,12 +51,12 @@ describe "<%= ns_table_name %>/index", type: :view do
 <% for attribute in output_attributes -%>
 <% if Rails.application.config.generators.options[:rails][:fixture_replacement] == :factory_girl -%>
 <% if attribute.reference? -%>
-    assert_select 'tr>td', text: @<%= ns_file_name %>.<%= attribute.name %>.name, count: <%= size %>
+    assert_select 'tr>td', text: @<%= ns_file_name %>.<%= attribute.name %>.name, count: 1
 <% else -%>
-    assert_select 'tr>td', text: @<%= ns_file_name %>.<%= attribute.name %>.to_s, count: <%= size %>
+    assert_select 'tr>td', text: @<%= ns_file_name %>.<%= attribute.name %>.to_s, count: 1
 <% end -%>
 <% else -%>
-    assert_select "tr>td", text: <%= value_for(attribute) %>.to_s, count: <%= size %>
+    assert_select "tr>td", text: <%= value_for(attribute) %>.to_s, count: 1
 <% end -%>
 <% end -%>
   end

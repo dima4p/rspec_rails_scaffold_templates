@@ -21,7 +21,7 @@ describe <%= controller_class_name %>Controller, type: :controller do
 <% attribute_name = attribute.respond_to?(:column_name) ? attribute.column_name : attribute.name -%>
 <% if Rails.application.config.generators.options[:rails][:fixture_replacement] == :factory_girl -%>
 <% factory_girl = true -%>
-  let(:valid_attributes) {FactoryGirl.build(:<%=file_name%>).attributes.slice *%w[<%= attribute_name %>]}
+  let(:valid_attributes) {FactoryGirl.attributes_for(:<%=file_name%>).slice *%w[<%= attribute_name %>].map(&:to_sym)}
 <% else -%>
 <% factory_girl = false -%>
   let(:valid_attributes) do
