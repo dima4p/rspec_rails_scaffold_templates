@@ -23,14 +23,14 @@ you will get the needed specs for controller and views.
 
 === Configuring
 
-You have to add to the <tt>application.rb</tt> file the config for generators as follows
+In order to have in the generated specs the code that works around the code
+that checks ability you have to add to the <tt>application.rb</tt> file the
+config for generators as follows
   config.generators do |g|
     g.cancan true
   end
-in order to have it the generated specs the code that works around the code
-that checks ability.
 
-For the specs on view it will be
+For the specs on views it will be
   before(:each) do
     allow(controller).to receive(:can?).and_return(true)
   end
