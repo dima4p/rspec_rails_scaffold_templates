@@ -7,9 +7,10 @@ require 'spec_helper'
 <% module_namespacing do -%>
 describe <%= controller_class_name %>Controller, type: :controller do
 
-<% if Rails.application.config.generators.options[:rails][:cancan] -%>
+<% if method = Rails.application.config.generators.options[:rails][:cancan] -%>
+<% method = 'current_user' unless Symbol === method -%>
   before :each do
-    allow(controller).to receive(:current_user).and_return(current_user)
+    allow(controller).to receive(:<%=method%>).and_return(<%=method%>)
   end
 
 <% end -%>

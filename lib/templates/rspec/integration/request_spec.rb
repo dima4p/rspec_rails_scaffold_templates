@@ -5,9 +5,10 @@ require 'spec_helper'
 <% end -%>
 
 describe "<%= class_name.pluralize %>", type: :request do
-<% if Rails.application.config.generators.options[:rails][:cancan] -%>
+<% if method = Rails.application.config.generators.options[:rails][:cancan] -%>
+<% method = 'current_user' unless Symbol === method -%>
   before :each do
-    allow_any_instance_of(<%= class_name.pluralize %>Controller).to receive(:current_user).and_return(current_user)
+    allow_any_instance_of(<%= class_name.pluralize %>Controller).to receive(:<%=method%>).and_return(<%=method%>)
   end
 
 <% end -%>

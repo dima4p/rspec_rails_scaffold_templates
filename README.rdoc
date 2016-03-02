@@ -21,6 +21,52 @@ Next time you run
 
 you will get the needed specs for controller and views.
 
+=== Configuring
+
+You have to add to the <tt>application.rb</tt> file the config for generators as follows
+  config.generators do |g|
+    g.cancan true
+  end
+in order to have it the generated specs the code that works around the code
+that checks ability.
+
+For the specs on view it will be
+  before(:each) do
+    allow(controller).to receive(:can?).and_return(true)
+  end
+while in the controller and request spec it will be
+  before :each do
+    allow(controller).to receive(:current_user).and_return(current_user)
+  end
+So, you need to add a method <tt>current_user</tt> to your rspec support, say, like this
+  def current_user(stubs = {})
+    @mock_current_user ||= mock_model(User, name: 'Mock Current User').tap do |user|
+      stubs.reverse_merge! is?: true, landing: nil
+      stubs.each do |k, v|
+        allow(user).to receive(k) {v}
+      end
+    end
+  end
+
+You may want to stub <tt>current_ability</tt> instead of <tt>current_user</tt> in
+controller. For doing this replace <tt>true</tt> with <tt>:current_ability</tt>
+in <tt>g.cancan</tt> config like this
+  config.generators do |g|
+    g.cancan :current_ability
+  end
+Of course, you will need method <tt>current_ability</tt> in you spec support in this case, say, like this
+  class GodAbility
+    include CanCan::Ability
+
+    def initialize
+      can :manage, :all
+    end
+  end
+
+  def current_ability
+    GodAbility.new
+  end
+
 == Contributing to rspec_rails_scaffold_templates
  
 * Check out the latest master to make sure the feature hasn't been implemented or the bug hasn't been fixed yet.
