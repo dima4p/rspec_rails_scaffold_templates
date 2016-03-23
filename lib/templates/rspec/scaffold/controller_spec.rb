@@ -17,11 +17,24 @@ describe <%= controller_class_name %>Controller, type: :controller do
   # This should return the minimal set of attributes required to create a valid
   # <%= class_name %>. As you add validations to <%= class_name %>, be sure to
   # adjust the attributes here as well. The list could not be empty.
-<% attribute = attributes.detect{|a| a.name == 'name' || a.name == 'title' || a.name == 'code' || a.name =~ /name/ || a.name =~ /title/} || attributes.first -%>
+<% links = attributes.select{|a| [:belongs_to, :references].include? a.type} -%>
+<% attribute = (attributes - links).detect{|a| a.name == 'name' || a.name == 'title' || a.name == 'code' || a.name =~ /name/ || a.name =~ /title/} || attributes.first -%>
 <% attribute_name = attribute.respond_to?(:column_name) ? attribute.column_name : attribute.name -%>
 <% if Rails.application.config.generators.options[:rails][:fixture_replacement] == :factory_girl -%>
 <% factory_girl = true -%>
+<% if links.present? -%>
+  let(:valid_attributes) do
+    FactoryGirl.attributes_for(:<%=file_name%>)
+      .slice(*%w[<%= attribute_name %>].map(&:to_sym))
+      .merge(
+<% links.each do |relation| -%>
+        <%= relation.name %>_id: create(:<%= relation.name %>).id,
+<% end -%>
+      )
+  end
+<% else -%>
   let(:valid_attributes) {FactoryGirl.attributes_for(:<%=file_name%>).slice *%w[<%= attribute_name %>].map(&:to_sym)}
+<% end -%>
 <% else -%>
 <% factory_girl = false -%>
   let(:valid_attributes) do
