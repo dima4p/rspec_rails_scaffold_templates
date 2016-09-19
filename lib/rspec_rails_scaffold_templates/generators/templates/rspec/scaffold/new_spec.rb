@@ -3,23 +3,32 @@ require 'rails_helper'
 <% else -%>
 require 'spec_helper'
 <% end -%>
+<% if Rails.application.config.generators.options[:rails][:fixture_replacement] == :factory_girl -%>
+<% factory_girl = true -%>
+<% else -%>
+<% factory_girl = false -%>
+<% end -%>
 
 <% output_attributes = attributes.reject{|attribute| [:datetime, :timestamp, :time, :date].index(attribute.type) } -%>
-describe "<%= ns_table_name %>/new", type: :view do
+describe "<%= ns_table_name %>/new", <%= type_metatag(:view) %> do
+<% if factory_girl -%>
+  let(:<%= ns_file_name %>) {build :<%= ns_file_name %>}
+<% else -%>
+  let(:<%= ns_file_name %>) do
+    <%= class_name %>.new(<%= ')' if output_attributes.empty? %>
+<% output_attributes.each_with_index do |attribute, attribute_index| -%>
+      <%= attribute.name %>: <%= value_for(attribute) %><%= attribute_index == output_attributes.length - 1 ? '' : ','%>
+<% end -%>
+<%= output_attributes.empty? ? "" : "    )\n" -%>
+  end
+<% end -%>
+
   before(:each) do
 <% if Rails.application.config.generators.options[:rails][:cancan] -%>
     allow(controller).to receive(:can?).and_return(true)
 <% end -%>
-<% if Rails.application.config.generators.options[:rails][:fixture_replacement] == :factory_girl -%>
-    @<%= ns_file_name %> = assign(:<%= ns_file_name %>, build(:<%= ns_file_name %>))
+    assign(:<%= ns_file_name %>, <%= ns_file_name %>)
   end
-<% else -%>
-    assign(:<%= ns_file_name %>, <%= class_name %>.new(<%= '))' if output_attributes.empty? %>
-<% output_attributes.each_with_index do |attribute, attribute_index| -%>
-      <%= attribute.name %>: <%= value_for(attribute) %><%= attribute_index == output_attributes.length - 1 ? '' : ','%>
-<% end -%>
-<%= !output_attributes.empty? ? "    ))\n  end" : "  end" %>
-<% end -%>
 
   it "renders new <%= ns_file_name %> form" do
     render

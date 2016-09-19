@@ -3,27 +3,31 @@ require 'rails_helper'
 <% else -%>
 require 'spec_helper'
 <% end -%>
+<% if Rails.application.config.generators.options[:rails][:fixture_replacement] == :factory_girl -%>
+<% factory_girl = true -%>
+<% else -%>
+<% factory_girl = false -%>
+<% end -%>
 
 <% output_attributes = attributes.reject{|attribute| [:created_at, :deleted_at, :updated_at].index(attribute.name) or attribute.password_digest? } -%>
-describe "<%= ns_table_name %>/index", type: :view do
+describe "<%= ns_table_name %>/index", <%= type_metatag(:view) %> do
+<% if factory_girl -%>
+  let(:<%= ns_file_name %>) {create :<%= ns_file_name %>}
+<% else -%>
+  let(:<%= ns_file_name %>) do
+    <%= class_name %>.create!(<%= ')' if output_attributes.empty? %>
+<% output_attributes.each_with_index do |attribute, attribute_index| -%>
+      <%= attribute.name %>: <%= value_for(attribute) %><%= attribute_index == output_attributes.length - 1 ? '' : ','%>
+<% end -%>
+<%= output_attributes.empty? ? "" : "    )\n" -%>
+  end
+<% end -%>
+
   before(:each) do
 <% if Rails.application.config.generators.options[:rails][:cancan] -%>
     allow(controller).to receive(:can?).and_return(true)
 <% end -%>
-<% if options[:fixture_replacement] == :factory_girl -%>
-  # options[:fixture_replacement] == :factory_girl
-<% end -%>
-<% if Rails.application.config.generators.options[:rails][:fixture_replacement] == :factory_girl -%>
-    @<%= ns_file_name %> = create(:<%= ns_file_name %>)
-<% else # no factory_girl -%>
-    <%= class_name %>.create(<%= output_attributes.empty? ? ')' : '' %>
-<% output_attributes.each_with_index do |attribute, attribute_index| -%>
-      <%= attribute.name %>: <%= value_for(attribute) %><%= attribute_index == output_attributes.length - 1 ? '' : ','%>
-<% end -%>
-<% if !output_attributes.empty? -%>
-    )
-<% end -%>
-<% end -%>
+    <%= ns_file_name %>  # to create
     assign :<%= table_name %>, <%= class_name %>.all
   end
 
@@ -33,9 +37,9 @@ describe "<%= ns_table_name %>/index", type: :view do
 <% for attribute in output_attributes -%>
 <% if Rails.application.config.generators.options[:rails][:fixture_replacement] == :factory_girl -%>
 <% if attribute.reference? -%>
-    assert_select 'tr>td', text: @<%= ns_file_name %>.<%= attribute.name %>.name, count: 1
+    assert_select 'tr>td', text: <%= ns_file_name %>.<%= attribute.name %>.name, count: 1
 <% else -%>
-    assert_select 'tr>td', text: @<%= ns_file_name %>.<%= attribute.name %>.to_s, count: 1
+    assert_select 'tr>td', text: <%= ns_file_name %>.<%= attribute.name %>.to_s, count: 1
 <% end -%>
 <% else -%>
     assert_select "tr>td", text: <%= value_for(attribute) %>.to_s, count: 1
@@ -51,9 +55,9 @@ describe "<%= ns_table_name %>/index", type: :view do
 <% for attribute in output_attributes -%>
 <% if Rails.application.config.generators.options[:rails][:fixture_replacement] == :factory_girl -%>
 <% if attribute.reference? -%>
-    assert_select 'tr>td', text: @<%= ns_file_name %>.<%= attribute.name %>.name, count: 1
+    assert_select 'tr>td', text: <%= ns_file_name %>.<%= attribute.name %>.name, count: 1
 <% else -%>
-    assert_select 'tr>td', text: @<%= ns_file_name %>.<%= attribute.name %>.to_s, count: 1
+    assert_select 'tr>td', text: <%= ns_file_name %>.<%= attribute.name %>.to_s, count: 1
 <% end -%>
 <% else -%>
     assert_select "tr>td", text: <%= value_for(attribute) %>.to_s, count: 1
