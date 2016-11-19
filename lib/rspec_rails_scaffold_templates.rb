@@ -1,1 +1,1 @@
-require 'rspec_rails_scaffold_templates/railties' if defined?(Rails)
+require 'rspec_rails_scaffold_templates/generators/scaffold_generator' if defined?(Rails)
