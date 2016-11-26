@@ -27,6 +27,7 @@ Gem::Specification.new do |s|
     "Rakefile",
     "VERSION",
     "lib/rspec_rails_scaffold_templates.rb",
+    "lib/rspec_rails_scaffold_templates/generators/integration_generator.rb",
     "lib/rspec_rails_scaffold_templates/generators/scaffold_generator.rb",
     "lib/rspec_rails_scaffold_templates/generators/templates/rspec/integration/request_spec.rb",
     "lib/rspec_rails_scaffold_templates/generators/templates/rspec/scaffold/api_controller_spec.rb",
