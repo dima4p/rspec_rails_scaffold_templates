@@ -12,9 +12,9 @@ require 'spec_helper'
 <% output_attributes = attributes.reject{|attribute| [:created_at, :deleted_at, :updated_at].index(attribute.name) or attribute.password_digest? } -%>
 describe "<%= ns_table_name %>/index", <%= type_metatag(:view) %> do
 <% if factory_girl -%>
-  let(:<%= ns_file_name %>) {create :<%= ns_file_name %>}
+  let!(:<%= ns_file_name %>) {create :<%= ns_file_name %>}
 <% else -%>
-  let(:<%= ns_file_name %>) do
+  let!(:<%= ns_file_name %>) do
     <%= class_name %>.create!(<%= ')' if output_attributes.empty? %>
 <% output_attributes.each_with_index do |attribute, attribute_index| -%>
       <%= attribute.name %>: <%= value_for(attribute) %><%= attribute_index == output_attributes.length - 1 ? '' : ','%>
@@ -27,7 +27,6 @@ describe "<%= ns_table_name %>/index", <%= type_metatag(:view) %> do
 <% if Rails.application.config.generators.options[:rails][:cancan] -%>
     allow(controller).to receive(:can?).and_return(true)
 <% end -%>
-    <%= ns_file_name %>  # to create
     assign :<%= table_name %>, <%= class_name %>.all
   end
 
