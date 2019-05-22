@@ -3,15 +3,15 @@ require 'rails_helper'
 <% else -%>
 require 'spec_helper'
 <% end -%>
-<% if Rails.application.config.generators.options[:rails][:fixture_replacement] == :factory_girl -%>
-<% factory_girl = true -%>
+<% if Rails.application.config.generators.options[:rails][:fixture_replacement] == :factory_bot -%>
+<% factory_bot = true -%>
 <% else -%>
-<% factory_girl = false -%>
+<% factory_bot = false -%>
 <% end -%>
 
 <% output_attributes = attributes.reject{|attribute| [:datetime, :timestamp, :time, :date].index(attribute.type) } -%>
 describe "<%= ns_table_name %>/new", <%= type_metatag(:view) %> do
-<% if factory_girl -%>
+<% if factory_bot -%>
   let(:<%= ns_file_name %>) {build :<%= ns_file_name %>}
 <% else -%>
   let(:<%= ns_file_name %>) do

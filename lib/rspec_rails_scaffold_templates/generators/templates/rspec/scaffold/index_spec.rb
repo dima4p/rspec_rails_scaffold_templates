@@ -3,15 +3,15 @@ require 'rails_helper'
 <% else -%>
 require 'spec_helper'
 <% end -%>
-<% if Rails.application.config.generators.options[:rails][:fixture_replacement] == :factory_girl -%>
-<% factory_girl = true -%>
+<% if Rails.application.config.generators.options[:rails][:fixture_replacement] == :factory_bot -%>
+<% factory_bot = true -%>
 <% else -%>
-<% factory_girl = false -%>
+<% factory_bot = false -%>
 <% end -%>
 
 <% output_attributes = attributes.reject{|attribute| [:created_at, :deleted_at, :updated_at].index(attribute.name) or attribute.password_digest? } -%>
 describe "<%= ns_table_name %>/index", <%= type_metatag(:view) %> do
-<% if factory_girl -%>
+<% if factory_bot -%>
   let!(:<%= ns_file_name %>) {create :<%= ns_file_name %>}
 <% else -%>
   let!(:<%= ns_file_name %>) do
@@ -27,6 +27,8 @@ describe "<%= ns_table_name %>/index", <%= type_metatag(:view) %> do
 <% if Rails.application.config.generators.options[:rails][:cancan] -%>
     allow(controller).to receive(:can?).and_return(true)
 <% end -%>
+    allow(controller).to receive(:params)
+        .and_return(ActionController::Parameters.new({}))
     assign :<%= table_name %>, <%= class_name %>.all
   end
 
@@ -34,7 +36,7 @@ describe "<%= ns_table_name %>/index", <%= type_metatag(:view) %> do
     render
 
 <% for attribute in output_attributes -%>
-<% if Rails.application.config.generators.options[:rails][:fixture_replacement] == :factory_girl -%>
+<% if Rails.application.config.generators.options[:rails][:fixture_replacement] == :factory_bot -%>
 <% if attribute.reference? -%>
     assert_select 'tr>td', text: <%= ns_file_name %>.<%= attribute.name %>.name, count: 1
 <% else -%>
@@ -52,7 +54,7 @@ describe "<%= ns_table_name %>/index", <%= type_metatag(:view) %> do
     render
 
 <% for attribute in output_attributes -%>
-<% if Rails.application.config.generators.options[:rails][:fixture_replacement] == :factory_girl -%>
+<% if Rails.application.config.generators.options[:rails][:fixture_replacement] == :factory_bot -%>
 <% if attribute.reference? -%>
     assert_select 'tr>td', text: <%= ns_file_name %>.<%= attribute.name %>.name, count: 1
 <% else -%>

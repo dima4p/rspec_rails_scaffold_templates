@@ -6,7 +6,7 @@ require 'spec_helper'
 
 <% output_attributes = attributes.reject{|attribute| [:created_at, :deleted_at, :updated_at].index(attribute.name) or attribute.password_digest? } -%>
 describe "<%= ns_table_name %>/show", <%= type_metatag(:view) %> do
-<% if Rails.application.config.generators.options[:rails][:fixture_replacement] == :factory_girl -%>
+<% if Rails.application.config.generators.options[:rails][:fixture_replacement] == :factory_bot -%>
   let(:<%= ns_file_name %>) {create :<%= ns_file_name %>}
 <% else -%>
   let(:<%= ns_file_name %>) do
@@ -30,7 +30,7 @@ describe "<%= ns_table_name %>/show", <%= type_metatag(:view) %> do
   it "renders attributes in dl>dd" do
     render
 <% for attribute in output_attributes -%>
-<% if Rails.application.config.generators.options[:rails][:fixture_replacement] == :factory_girl -%>
+<% if Rails.application.config.generators.options[:rails][:fixture_replacement] == :factory_bot -%>
 <% if attribute.reference? -%>
     assert_select 'dl>dd', text: Regexp.new(<%= ns_file_name %>.<%= attribute.name %>.name)
 <% else -%>

@@ -19,13 +19,13 @@ describe <%= controller_class_name %>Controller, <%= type_metatag(:controller) %
 <% links = attributes.select{|a| [:belongs_to, :references].include? a.type} -%>
 <% attribute = (attributes - links).detect{|a| a.name == 'name' || a.name == 'title' || a.name == 'code' || a.name =~ /name/ || a.name =~ /title/} || attributes.first -%>
 <% attribute_name = attribute.respond_to?(:column_name) ? attribute.column_name : attribute.name -%>
-<% if Rails.application.config.generators.options[:rails][:fixture_replacement] == :factory_girl -%>
-<% factory_girl = true -%>
+<% if Rails.application.config.generators.options[:rails][:fixture_replacement] == :factory_bot -%>
+<% factory_bot = true -%>
   let(:<%= file_name %>) {create :<%= file_name %>}
 
 <% if links.present? -%>
   let(:valid_attributes) do
-    FactoryGirl.attributes_for(:<%=file_name%>)
+    attributes_for(:<%=file_name%>)
       .slice(*%w[<%= attribute_name %>].map(&:to_sym))
       .merge(
 <% links.each do |relation| -%>
@@ -34,10 +34,10 @@ describe <%= controller_class_name %>Controller, <%= type_metatag(:controller) %
       )
   end
 <% else -%>
-  let(:valid_attributes) {FactoryGirl.attributes_for(:<%=file_name%>).slice *%w[<%= attribute_name %>].map(&:to_sym)}
+  let(:valid_attributes) {attributes_for(:<%=file_name%>).slice *%w[<%= attribute_name %>].map(&:to_sym)}
 <% end -%>
 <% else -%>
-<% factory_girl = false -%>
+<% factory_bot = false -%>
   let(:<%= file_name %>) {<%= class_name %>.create! valid_attributes}
 
   let(:valid_attributes) do
