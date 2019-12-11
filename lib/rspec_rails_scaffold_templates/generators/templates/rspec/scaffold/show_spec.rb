@@ -32,12 +32,12 @@ describe "<%= ns_table_name %>/show", <%= type_metatag(:view) %> do
 <% for attribute in output_attributes -%>
 <% if Rails.application.config.generators.options[:rails][:fixture_replacement] == :factory_bot -%>
 <% if attribute.reference? -%>
-    assert_select 'dl>dd', text: Regexp.new(<%= ns_file_name %>.<%= attribute.name %>.name)
+    assert_select 'dl>dd.<%= attribute.name %>', text: Regexp.new(<%= ns_file_name %>.<%= attribute.name %>.name)
 <% else -%>
-    assert_select 'dl>dd', text: Regexp.new(<%= ns_file_name %>.<%= attribute.name %>.to_s)
+    assert_select 'dl>dd.<%= attribute.name %>', text: Regexp.new(<%= ns_file_name %>.<%= attribute.name %>.to_s)
 <% end -%>
 <% else -%>
-    assert_select 'dl>dd', text: <%= value_for(attribute) %>
+    assert_select 'dl>dd.<%= attribute.name %>', text: <%= value_for(attribute) %>
 <% end -%>
 <% end -%>
   end

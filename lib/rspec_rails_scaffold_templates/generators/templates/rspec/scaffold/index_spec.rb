@@ -38,12 +38,12 @@ describe "<%= ns_table_name %>/index", <%= type_metatag(:view) %> do
 <% for attribute in output_attributes -%>
 <% if Rails.application.config.generators.options[:rails][:fixture_replacement] == :factory_bot -%>
 <% if attribute.reference? -%>
-    assert_select 'tr>td', text: <%= ns_file_name %>.<%= attribute.name %>.name, count: 1
+    assert_select 'tr>td.<%= attribute.name %>', text: <%= ns_file_name %>.<%= attribute.name %>.name, count: 1
 <% else -%>
-    assert_select 'tr>td', text: <%= ns_file_name %>.<%= attribute.name %>.to_s, count: 1
+    assert_select 'tr>td.<%= attribute.name %>', text: <%= ns_file_name %>.<%= attribute.name %>.to_s, count: 1
 <% end -%>
 <% else -%>
-    assert_select "tr>td", text: <%= value_for(attribute) %>.to_s, count: 1
+    assert_select "tr>td.<%= attribute.name %>", text: <%= value_for(attribute) %>.to_s, count: 1
 <% end -%>
 <% end -%>
   end
@@ -56,12 +56,12 @@ describe "<%= ns_table_name %>/index", <%= type_metatag(:view) %> do
 <% for attribute in output_attributes -%>
 <% if Rails.application.config.generators.options[:rails][:fixture_replacement] == :factory_bot -%>
 <% if attribute.reference? -%>
-    assert_select 'tr>td', text: <%= ns_file_name %>.<%= attribute.name %>.name, count: 1
+    assert_select 'tr>td.<%= attribute.name %>', text: <%= ns_file_name %>.<%= attribute.name %>.name, count: 1
 <% else -%>
-    assert_select 'tr>td', text: <%= ns_file_name %>.<%= attribute.name %>.to_s, count: 1
+    assert_select 'tr>td.<%= attribute.name %>', text: <%= ns_file_name %>.<%= attribute.name %>.to_s, count: 1
 <% end -%>
 <% else -%>
-    assert_select "tr>td", text: <%= value_for(attribute) %>.to_s, count: 1
+    assert_select "tr>td.<%= attribute.name %>", text: <%= value_for(attribute) %>.to_s, count: 1
 <% end -%>
 <% end -%>
   end
