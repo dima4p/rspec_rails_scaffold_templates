@@ -26,7 +26,7 @@ describe <%= controller_class_name %>Controller, <%= type_metatag(:controller) %
 <% if links.present? -%>
   let(:valid_attributes) do
     attributes_for(:<%=file_name%>)
-      .slice(*%w[<%= attribute_name %>].map(&:to_sym))
+      .slice(*%i[<%= attribute_name %>])
       .merge(
 <% links.each do |relation| -%>
         <%= relation.name %>_id: create(:<%= relation.name %>).id,
@@ -34,7 +34,7 @@ describe <%= controller_class_name %>Controller, <%= type_metatag(:controller) %
       )
   end
 <% else -%>
-  let(:valid_attributes) {attributes_for(:<%=file_name%>).slice *%w[<%= attribute_name %>].map(&:to_sym)}
+  let(:valid_attributes) {attributes_for(:<%=file_name%>).slice *%i[<%= attribute_name %>]}
 <% end -%>
 <% else -%>
 <% factory_bot = false -%>
