@@ -14,5 +14,6 @@ doc
 
 # jeweler generated
 pkg
+*.gem
 
 Gemfile.lock

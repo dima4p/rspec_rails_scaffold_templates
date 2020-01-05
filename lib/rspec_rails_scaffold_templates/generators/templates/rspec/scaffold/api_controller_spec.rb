@@ -26,7 +26,7 @@ describe Api::<%= options[:api_version].camelcase + '::' if options[:api_version
 <% if links.present? -%>
   let(:valid_attributes) do
     attributes_for(:<%=file_name%>)
-      .slice(*%w[<%= attribute_name %>].map(&:to_sym))
+      .slice(*%i[<%= attribute_name %>])
       .merge(
 <% links.each do |relation| -%>
         <%= relation.name %>_id: create(:<%= relation.name %>).id,
@@ -34,7 +34,7 @@ describe Api::<%= options[:api_version].camelcase + '::' if options[:api_version
       )
   end
 <% else -%>
-  let(:valid_attributes) {attributes_for(:<%=file_name%>).slice *%w[<%= attribute_name %>].map(&:to_sym)}
+  let(:valid_attributes) {attributes_for(:<%=file_name%>).slice *%i[<%= attribute_name %>]}
 <% end -%>
 <% else -%>
 <% factory_bot = false -%>
