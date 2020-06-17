@@ -61,80 +61,96 @@ describe "/<%= name.underscore.pluralize %>", <%= type_metatag(:request) %> do
 
 <% unless options[:singleton] -%>
   describe "GET /index" do
+    subject(:get_index) {get <%= index_helper %>_url}
+
     it "renders a successful response" do
       <%= class_name %>.create! valid_attributes
-      get <%= index_helper %>_url
+      get_index
       expect(response).to be_successful
     end
   end
 <% end -%>
 
   describe "GET /show" do
+    subject(:get_show) {get <%= show_helper.sub(/@([^)]+)/, 'id: \1.to_param') %>}
+
     it "renders a successful response" do
 <% unless factory_bot -%>
       <%= file_name %> = <%= class_name %>.create! valid_attributes
 <% end -%>
-      get <%= show_helper.sub(/@([^)]+)/, 'id: \1.to_param') %>
+      get_show
       expect(response).to be_successful
     end
   end
 
   describe "GET /new" do
+    subject(:get_new) {get <%= new_helper %>}
+
     it "renders a successful response" do
-      get <%= new_helper %>
+      get_new
       expect(response).to be_successful
     end
   end
 
   describe "GET /edit" do
+    subject(:get_edit) {get <%= edit_helper.sub(/@([^)]*)/, 'id: \1.to_param') %>}
+
     it "render a successful response" do
 <% unless factory_bot -%>
       <%= file_name %> = <%= class_name %>.create! valid_attributes
 <% end -%>
-      get <%= edit_helper.tr('@','id: ') %>
+      get_edit
       expect(response).to be_successful
     end
   end
 
   describe "POST /create" do
+    subject(:post_create) do
+      post <%= index_helper %>_url, params: { <%= ns_file_name %>: attributes }
+    end
+
     context "with valid parameters" do
+      let(:attributes) {valid_attributes}
+
       it "creates a new <%= class_name %>" do
-        expect {
-          post <%= index_helper %>_url, params: { <%= ns_file_name %>: valid_attributes }
-        }.to change(<%= class_name %>, :count).by(1)
+        expect{post_create}.to change(<%= class_name %>, :count).by(1)
       end
 
       it "redirects to the created <%= ns_file_name %>" do
-        post <%= index_helper %>_url, params: { <%= ns_file_name %>: valid_attributes }
-        expect(response).to redirect_to(<%= show_helper.gsub("\@#{file_name}", class_name+".last") %>)
+        post_create
+        expect(response).to redirect_to(<%= show_helper.gsub("\@#{file_name}", 'id: ' + class_name + ".last.to_param") %>)
       end
     end
 
     context "with invalid parameters" do
+      let(:attributes) {invalid_attributes}
+
       it "does not create a new <%= class_name %>" do
-        expect {
-          post <%= index_helper %>_url, params: { <%= ns_file_name %>: invalid_attributes }
-        }.to change(<%= class_name %>, :count).by(0)
+        expect {post_create}.not_to change(<%= class_name %>, :count)
       end
 
       it "renders a successful response (i.e. to display the 'new' template)" do
-        post <%= index_helper %>_url, params: { <%= ns_file_name %>: invalid_attributes }
+        post_create
         expect(response).to be_successful
       end
     end
   end
 
   describe "PATCH /update" do
+    subject(:patch_update) do
+      patch <%= show_helper.sub(/@([^)]+)/, 'id: \1.to_param') %>, params: { <%= singular_table_name %>: attributes }
+    end
+
     context "with valid parameters" do
-      let(:new_attributes) { {<%= attribute_name %>: 'New value'} }
+      let(:attributes) { {<%= attribute_name %>: 'New value'} }
 
       it "updates the requested <%= ns_file_name %>" do
         # expect_any_instance_of(<%= class_name %>)
-        #   .to receive(:update).with(new_attributes.inject({}){|_, (k, v)| _[k] = v.to_s; _})
+        #   .to receive(:update).with(attributes.inject({}){|_, (k, v)| _[k] = v.to_s; _})
 <% unless factory_bot -%>
         <%= file_name %> = <%= class_name %>.create! valid_attributes
 <% end -%>
-        patch <%= show_helper.sub(/@([^)]+)/, 'id: \1.to_param') %>, params: { <%= singular_table_name %>: new_attributes }
+        patch_update
         <%= file_name %>.reload
         # skip("Add assertions for updated state")
         expect(<%= file_name %>.<%= attribute_name %>).to eq 'New value'
@@ -144,33 +160,35 @@ describe "/<%= name.underscore.pluralize %>", <%= type_metatag(:request) %> do
 <% unless factory_bot -%>
         <%= file_name %> = <%= class_name %>.create! valid_attributes
 <% end -%>
-        patch <%= show_helper.sub(/@([^)]+)/, 'id: \1.to_param') %>, params: { <%= singular_table_name %>: new_attributes }
+        patch_update
         <%= file_name %>.reload
         expect(response).to redirect_to(<%= singular_table_name %>_url(id: <%= file_name %>.to_param))
       end
     end
 
     context "with invalid parameters" do
+      let(:attributes) {invalid_attributes}
+
       it "renders a successful response (i.e. to display the 'edit' template)" do
 <% unless factory_bot -%>
         <%= file_name %> = <%= class_name %>.create! valid_attributes
 <% end -%>
-        patch <%= show_helper.sub(/@([^)]+)/, 'id: \1.to_param') %>, params: { <%= singular_table_name %>: invalid_attributes }
+        patch_update
         expect(response).to be_successful
       end
     end
   end
 
   describe "DELETE /destroy" do
+    subject(:delete_destroy) {delete <%= show_helper.sub(/@([^)]+)/, 'id: \1.to_param') %>}
+
     it "destroys the requested <%= ns_file_name %>" do
 <% if factory_bot -%>
       <%= file_name %>
 <% else -%>
       <%= file_name %> = <%= class_name %>.create! valid_attributes
 <% end -%>
-      expect {
-        delete <%= show_helper.sub(/@([^)]+)/, 'id: \1.to_param') %>
-      }.to change(<%= class_name %>, :count).by(-1)
+      expect {delete_destroy}.to change(<%= class_name %>, :count).by(-1)
     end
 
     it "redirects to the <%= table_name %> list" do
@@ -179,7 +197,7 @@ describe "/<%= name.underscore.pluralize %>", <%= type_metatag(:request) %> do
 <% else -%>
       <%= file_name %> = <%= class_name %>.create! valid_attributes
 <% end -%>
-      delete <%= show_helper.sub(/@([^)]+)/, 'id: \1.to_param') %>
+      delete_destroy
       expect(response).to redirect_to(<%= index_helper %>_url)
     end
   end
