@@ -10,7 +10,7 @@ require 'spec_helper'
 <% end -%>
 
 <% output_attributes = attributes.reject{|attribute| [:datetime, :timestamp, :time, :date].index(attribute.type) } -%>
-describe "<%= ns_table_name %>/edit", <%= type_metatag(:view) %> do
+describe "<%= ns_table_name %>/edit.html.#{options[:template_engine]}", <%= type_metatag(:view) %> do
 <% if factory_bot -%>
   let(:<%= ns_file_name %>) {create :<%= ns_file_name %>}
 <% else -%>

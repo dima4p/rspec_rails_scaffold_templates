@@ -10,7 +10,7 @@ require 'spec_helper'
 <% end -%>
 
 <% output_attributes = attributes.reject{|attribute| [:created_at, :deleted_at, :updated_at].index(attribute.name) or attribute.password_digest? } -%>
-describe "<%= ns_table_name %>/index", <%= type_metatag(:view) %> do
+describe "<%= ns_table_name %>/index.html.#{options[:template_engine]}", <%= type_metatag(:view) %> do
 <% if factory_bot -%>
   let!(:<%= ns_file_name %>) {create :<%= ns_file_name %>}
 <% else -%>
