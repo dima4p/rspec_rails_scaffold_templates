@@ -19,6 +19,9 @@ describe "/<%= name.underscore.pluralize %>", <%= type_metatag(:request) %> do
   before :each do
     allow_any_instance_of(<%= controller_class_name %>Controller).to receive(:<%=method%>)
         .and_return(<%=method%>)
+<% if options[:cancan] -%>
+    allow_any_instance_of(Ability).to receive(:can?).and_return true
+<% end -%>
   end
 
 <% end -%>
@@ -72,7 +75,7 @@ describe "/<%= name.underscore.pluralize %>", <%= type_metatag(:request) %> do
 <% end -%>
 
   describe "GET /show" do
-    subject(:get_show) {get <%= show_helper.sub(/@([^)]+)/, 'id: \1.to_param') %>}
+    subject(:get_show) {get <%= file_name %>_url(id: <%= file_name %>.to_param)}
 
     it "renders a successful response" do
 <% unless factory_bot -%>
@@ -84,7 +87,7 @@ describe "/<%= name.underscore.pluralize %>", <%= type_metatag(:request) %> do
   end
 
   describe "GET /new" do
-    subject(:get_new) {get <%= new_helper %>}
+    subject(:get_new) {get new_<%= file_name %>_url}
 
     it "renders a successful response" do
       get_new
@@ -93,7 +96,7 @@ describe "/<%= name.underscore.pluralize %>", <%= type_metatag(:request) %> do
   end
 
   describe "GET /edit" do
-    subject(:get_edit) {get <%= edit_helper.sub(/@([^)]*)/, 'id: \1.to_param') %>}
+    subject(:get_edit) {get edit_<%= file_name %>_url(id: <%= file_name %>.to_param)}
 
     it "render a successful response" do
 <% unless factory_bot -%>
@@ -118,7 +121,7 @@ describe "/<%= name.underscore.pluralize %>", <%= type_metatag(:request) %> do
 
       it "redirects to the created <%= ns_file_name %>" do
         post_create
-        expect(response).to redirect_to(<%= show_helper.gsub("\@#{file_name}", 'id: ' + class_name + ".last.to_param") %>)
+        expect(response).to redirect_to <%= file_name %>_url <%= class_name %>.last.to_param
       end
     end
 
@@ -138,7 +141,7 @@ describe "/<%= name.underscore.pluralize %>", <%= type_metatag(:request) %> do
 
   describe "PATCH /update" do
     subject(:patch_update) do
-      patch <%= show_helper.sub(/@([^)]+)/, 'id: \1.to_param') %>, params: { <%= singular_table_name %>: attributes }
+      patch <%= file_name %>_url(id: <%= file_name %>.to_param), params: { <%= singular_table_name %>: attributes }
     end
 
     context "with valid parameters" do
@@ -180,7 +183,7 @@ describe "/<%= name.underscore.pluralize %>", <%= type_metatag(:request) %> do
   end
 
   describe "DELETE /destroy" do
-    subject(:delete_destroy) {delete <%= show_helper.sub(/@([^)]+)/, 'id: \1.to_param') %>}
+    subject(:delete_destroy) {delete <%= file_name %>_url(id: <%= file_name %>.to_param)}
 
     it "destroys the requested <%= ns_file_name %>" do
 <% if factory_bot -%>

@@ -19,7 +19,7 @@ Jeweler::Tasks.new do |gem|
   gem.license = "MIT"
   gem.summary = %Q{RSpec scaffold generator templates that use FactoryGirl and WiceGrid}
   gem.description = %Q{RSpec scaffold generator templates that use FactoryGirl and WiceGrid}
-  gem.email = "dima@koulikoff.ru"
+  gem.email = "dima@koulikoff.de"
   gem.authors = ["Dmitri Koulikoff"]
   gem.version = File.exist?('VERSION') ? File.read('VERSION') : ""
   # dependencies defined in Gemfile
