@@ -132,9 +132,14 @@ describe "/<%= name.underscore.pluralize %>", <%= type_metatag(:request) %> do
         expect {post_create}.not_to change(<%= class_name %>, :count)
       end
 
-      it "renders a successful response (i.e. to display the 'new' template)" do
+      it "returns an unprocessable_entity response" do
         post_create
-        expect(response).to be_successful
+        expect(response).to have_http_status :unprocessable_entity
+      end
+
+      it "renders the 'new' template)" do
+        post_create
+        expect(response).to render_template :new
       end
     end
   end
@@ -172,12 +177,20 @@ describe "/<%= name.underscore.pluralize %>", <%= type_metatag(:request) %> do
     context "with invalid parameters" do
       let(:attributes) {invalid_attributes}
 
-      it "renders a successful response (i.e. to display the 'edit' template)" do
+      it "returns an unprocessable_entity response" do
 <% unless factory_bot -%>
         <%= file_name %> = <%= class_name %>.create! valid_attributes
 <% end -%>
         patch_update
-        expect(response).to be_successful
+        expect(response).to have_http_status :unprocessable_entity
+      end
+
+      it "renders the 'edit' template)" do
+<% unless factory_bot -%>
+        <%= file_name %> = <%= class_name %>.create! valid_attributes
+<% end -%>
+        patch_update
+        expect(response).to render_template :edit
       end
     end
   end
