@@ -14,10 +14,6 @@ require 'rails_helper'
 
 <% module_namespacing do -%>
 describe "/<%= name.underscore.pluralize %>", <%= type_metatag(:request) %> do
-  <% if mountable_engine? -%>
-    include Engine.routes.url_helpers
-  <% end -%>
-
 <% if method = Rails.application.config.generators.options[:rails][:cancan] -%>
 <% method = 'current_user' unless Symbol === method -%>
   before :each do
@@ -66,9 +62,19 @@ describe "/<%= name.underscore.pluralize %>", <%= type_metatag(:request) %> do
     skip("Add a hash of attributes invalid for your model")
   end
 
+  # This should return the minimal set of values that should be in the headers
+  # in order to pass any filters (e.g. authentication) defined in
+  # <%= controller_class_name %>Controller, or in your router and rack
+  # middleware. Be sure to keep this updated too.
+  let(:valid_headers) do
+    {}
+  end
+
 <% unless options[:singleton] -%>
   describe "GET /index" do
-    subject(:get_index) {get <%= index_helper %>_url}
+    subject(:get_index) do
+      get <%= index_helper %>_url, headers: valid_headers, as: :json
+    end
 
     it "renders a successful response" do
       <%= class_name %>.create! valid_attributes
@@ -79,7 +85,10 @@ describe "/<%= name.underscore.pluralize %>", <%= type_metatag(:request) %> do
 <% end -%>
 
   describe "GET /show" do
-    subject(:get_show) {get <%= file_name %>_url(id: <%= file_name %>.to_param)}
+    subject(:get_show) do
+      get <%= file_name %>_url(id: <%= file_name %>.to_param),
+          headers: valid_headers, as: :json
+    end
 
     it "renders a successful response" do
 <% unless factory_bot -%>
@@ -90,30 +99,10 @@ describe "/<%= name.underscore.pluralize %>", <%= type_metatag(:request) %> do
     end
   end
 
-  describe "GET /new" do
-    subject(:get_new) {get new_<%= file_name %>_url}
-
-    it "renders a successful response" do
-      get_new
-      expect(response).to be_successful
-    end
-  end
-
-  describe "GET /edit" do
-    subject(:get_edit) {get edit_<%= file_name %>_url(id: <%= file_name %>.to_param)}
-
-    it "render a successful response" do
-<% unless factory_bot -%>
-      <%= file_name %> = <%= class_name %>.create! valid_attributes
-<% end -%>
-      get_edit
-      expect(response).to be_successful
-    end
-  end
-
   describe "POST /create" do
     subject(:post_create) do
-      post <%= index_helper %>_url, params: { <%= ns_file_name %>: attributes }
+      post <%= index_helper %>_url, params: { <%= ns_file_name %>: attributes },
+          headers: valid_headers, as: :json
     end
 
     context "with valid parameters" do
@@ -123,9 +112,14 @@ describe "/<%= name.underscore.pluralize %>", <%= type_metatag(:request) %> do
         expect{post_create}.to change(<%= class_name %>, :count).by(1)
       end
 
-      it "redirects to the created <%= ns_file_name %>" do
+      it "renders a JSON response with the new <%= singular_table_name %>" do
         post_create
-        expect(response).to redirect_to <%= file_name %>_url <%= class_name %>.last.to_param
+        expect(response.content_type).to match(a_string_including("application/json"))
+      end
+
+      it "returns http_status :created" do
+        post_create
+        expect(response).to have_http_status(:created)
       end
     end
 
@@ -136,21 +130,23 @@ describe "/<%= name.underscore.pluralize %>", <%= type_metatag(:request) %> do
         expect {post_create}.not_to change(<%= class_name %>, :count)
       end
 
-      it "returns an unprocessable_entity response" do
+      it "returns http_status :unprocessable_entity" do
         post_create
         expect(response).to have_http_status :unprocessable_entity
       end
 
-      it "renders the 'new' template)" do
+      it "renders a JSON response with errors for the new <%= singular_table_name %>" do
         post_create
-        expect(response).to render_template :new
+        expect(response.content_type).to match(a_string_including("application/json"))
       end
     end
   end
 
   describe "PATCH /update" do
     subject(:patch_update) do
-      patch <%= file_name %>_url(id: <%= file_name %>.to_param), params: { <%= singular_table_name %>: attributes }
+      patch <%= file_name %>_url(id: <%= file_name %>.to_param),
+          params: { <%= singular_table_name %>: attributes },
+          headers: valid_headers, as: :json
     end
 
     context "with valid parameters" do
@@ -168,20 +164,24 @@ describe "/<%= name.underscore.pluralize %>", <%= type_metatag(:request) %> do
         expect(<%= file_name %>.<%= attribute_name %>).to eq 'New value'
       end
 
-      it "redirects to the <%= ns_file_name %>" do
+      it "renders a JSON response with the <%= singular_table_name %>" do
 <% unless factory_bot -%>
         <%= file_name %> = <%= class_name %>.create! valid_attributes
 <% end -%>
         patch_update
-        <%= file_name %>.reload
-        expect(response).to redirect_to(<%= singular_table_name %>_url(id: <%= file_name %>.to_param))
+        expect(response.content_type).to match(a_string_including("application/json"))
+      end
+
+      it "returns http_status :ok" do
+        patch_update
+        expect(response).to have_http_status(:ok)
       end
     end
 
     context "with invalid parameters" do
       let(:attributes) {invalid_attributes}
 
-      it "returns an unprocessable_entity response" do
+      it "returns http_status :unprocessable_entity" do
 <% unless factory_bot -%>
         <%= file_name %> = <%= class_name %>.create! valid_attributes
 <% end -%>
@@ -189,12 +189,12 @@ describe "/<%= name.underscore.pluralize %>", <%= type_metatag(:request) %> do
         expect(response).to have_http_status :unprocessable_entity
       end
 
-      it "renders the 'edit' template)" do
+      it "renders a JSON response with errors for the <%= singular_table_name %>" do
 <% unless factory_bot -%>
         <%= file_name %> = <%= class_name %>.create! valid_attributes
 <% end -%>
         patch_update
-        expect(response).to render_template :edit
+        expect(response.content_type).to match(a_string_including("application/json"))
       end
     end
   end
@@ -211,14 +211,9 @@ describe "/<%= name.underscore.pluralize %>", <%= type_metatag(:request) %> do
       expect {delete_destroy}.to change(<%= class_name %>, :count).by(-1)
     end
 
-    it "redirects to the <%= table_name %> list" do
-<% if factory_bot -%>
-      <%= file_name %>
-<% else -%>
-      <%= file_name %> = <%= class_name %>.create! valid_attributes
-<% end -%>
+    it "returns http_status :no_content" do
       delete_destroy
-      expect(response).to redirect_to(<%= index_helper %>_url)
+      expect(response).to have_http_status(:no_content)
     end
   end
 end
